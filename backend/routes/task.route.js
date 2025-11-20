@@ -4,7 +4,7 @@ const {postTask,getTasks,getTask,putTask,deleteTask} = require("../controllers/t
 router.post("/", postTask);
  router.get("/", getTasks);
 // router.get("/:id",getTask);
-// router.put("/:id",putTask);
+ router.put("/:id",putTask);
  router.delete("/:id",deleteTask);
 
 module.exports = router;

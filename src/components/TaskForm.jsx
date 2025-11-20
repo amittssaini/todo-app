@@ -22,7 +22,7 @@ export default function TaskForm({ onClose,defaultValue,onSuccess }) {
   const postFormTask = async (data) => {
   try {
     await axios.post(config.endpoint, data);
-
+    
     enqueueSnackbar("Task added!", { variant: "success" });
 
     onSuccess();  // ⬅️ tells parent to refresh list
@@ -40,9 +40,15 @@ export default function TaskForm({ onClose,defaultValue,onSuccess }) {
     }
 
     try {
-      console.log(formData); 
+      console.log(data); 
       // here i call the api 
+      console.log("hello id is :: ", defaultValue._id)
+      const response = await axios.put(`${config.endpoint}/${defaultValue._id}`,data)
+     if(response.status===200){
       enqueueSnackbar("Task updated successfully!", { variant: "success" });
+          onSuccess();  // ⬅️ tells parent to refresh list
+          onClose(); 
+     }
        // close modal from here
        setFormData({title:"",description:""})
     } catch (error) {
@@ -51,7 +57,11 @@ export default function TaskForm({ onClose,defaultValue,onSuccess }) {
   }
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    postFormTask(formData);
+    if(!defaultValue)
+       postFormTask(formData);
+    else
+        editFormTask(formData)
+
   };
 
   return (

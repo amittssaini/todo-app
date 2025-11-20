@@ -1,4 +1,4 @@
-const { post } = require("../routes/task.route")
+
 const TaskService = require("../services/task.service");
 const TaskServiceInstance = new TaskService();
 
@@ -29,9 +29,35 @@ const getTask =async(req,res)=>{
         res.status(400).json({ error: error.message });
     }
 }
-// const putTask =async(req,res)=>{
-    
-// }
+const putTask =async(req,res)=>{
+    try {
+      const id = req.params.id;
+      const data = req.body;
+
+      const updatedTask = await TaskServiceInstance.updateTask(id,data)
+
+      if (!updatedTask) {
+         res.status(404).json({
+          success: false,
+          message: "Task not found"
+        });
+      }
+
+       res.status(200).json({
+        success: true,
+        message: "Task updated successfully",
+        data: updatedTask,
+      });
+
+    } catch (err) {
+      console.log(err);
+       res.status(500).json({
+        success: false,
+        message: "Error updating task",
+      });
+    }
+  }
+
 const deleteTask =async(req,res)=>{
     try {
         const id = req.params.id;
@@ -43,4 +69,4 @@ const deleteTask =async(req,res)=>{
     }
  }
 
-module.exports={getTasks,postTask,deleteTask}
+module.exports={getTasks,postTask,deleteTask,putTask}

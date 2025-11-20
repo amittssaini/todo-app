@@ -33,37 +33,37 @@ class Task{
             const response = await taskModel.findById(id);
             return response;
         } catch (error) {
-            
+            console.error("Error in fetching Task:", error.message);
+            throw new Error(error.message || "Failed to fetching  task");
         }
 
     }
-    async putTasks(id,data){
-        try {
 
-    // Remove undefined fields (in case the user didn't send them)
-    const updateFields = {};
-    if (data.title !== undefined) updateFields.title = data.title;
-    if (data.description !== undefined) updateFields.description = data.description;
-    if (data.status !== undefined) updateFields.status = data.status;
+    async updateTask(id, data) {
+    try {
+         if (data.title) {
+        const existing = await taskModel.findOne({
+          title: { $regex: `^${data.title}$`, $options: "i" },
+          _id: { $ne: id } // exclude the same task
+        });
 
-    const updatedDoc = await taskModel.findByIdAndUpdate(
-      id,
-      { $set: updateFields },
-      { new: true, runValidators: true }  // return updated doc + apply validations
-    );
+        if (existing) {
+          throw new Error("Task title already exists (case-insensitive).");
+        }
+      }
+      const updated = await taskModel.findByIdAndUpdate(id, data, {
+        new: true,        
+        runValidators: true,
+      });
 
-    if (!updatedDoc) {
-      const error = new Error("Task not found");
-      error.status = 404;
-      throw error;
+      return updated;
+    } catch (error) {
+            console.error("Error in updating Task:", error.message);
+            throw new Error(error.message || "Failed to updating  task");
     }
-
-    return updatedDoc;
-
-  } catch (err) {
-    throw err;
   }
-    }
+
+    
     async deleteTask(id){
         try {
             const response = await taskModel.findByIdAndDelete(id);
