@@ -9,9 +9,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/home" element={<Home/>}/>
-        <Route path="/edit/:id" element={<TaskForm />} />
-        <Route path="/add" element={<TaskForm />} />
+        <Route path="/" element={<Home/>}/>
       </Routes>
     </Router>
   );
