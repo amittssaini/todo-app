@@ -1,3 +1,3 @@
 export const config = {
-  endpoint: "http://localhost:8084/api/tasks",
+  endpoint: "https://todo-app-2-7s5i.onrender.com",
 };
